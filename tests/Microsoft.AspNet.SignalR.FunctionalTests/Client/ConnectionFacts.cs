@@ -24,7 +24,7 @@ namespace Microsoft.AspNet.SignalR.Tests
                 host.Initialize();
                 var connection = CreateConnection(host, "/examine-request");
 
-                connection.Received += (arg) =>
+                    connection.Received += arg =>
                 {
                     JObject headers = JsonConvert.DeserializeObject<JObject>(arg);
                     if (transportType != TransportType.Websockets)
