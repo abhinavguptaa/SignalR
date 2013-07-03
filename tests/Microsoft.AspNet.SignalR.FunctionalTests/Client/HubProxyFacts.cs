@@ -141,7 +141,7 @@ namespace Microsoft.AspNet.SignalR.Tests
                 IHubProxy proxy = hubConnection.CreateHubProxy("ExamineHeadersHub");
                 var tcs = new TaskCompletionSource<object>();
 
-                proxy.On("sendHeader", (headers) =>
+                    proxy.On("sendHeader", headers =>
                 {
                     Assert.Equal<string>("test-header", (string)headers.testHeader);
                     if (transportType != TransportType.Websockets)
@@ -170,9 +170,9 @@ namespace Microsoft.AspNet.SignalR.Tests
         [Theory]
         public void RequestHeadersCanBeSetOnceConnected(HostType hostType, TransportType transportType, MessageBusType messageBusType)
                 var mre = new ManualResetEventSlim();
-                    proxy.On("sendHeader", (headers) =>
+                    proxy.On("sendHeader", headers =>
                     {
-                        Assert.Equal<string>("test-header", (string)headers.testHeader);
+                        Assert.Equal("test-header", (string)headers.testHeader);
                         mre.Set();
                     });
 
