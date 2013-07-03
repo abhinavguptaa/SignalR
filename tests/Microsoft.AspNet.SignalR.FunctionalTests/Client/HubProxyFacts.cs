@@ -160,7 +160,7 @@ namespace Microsoft.AspNet.SignalR.Tests
                 }
 
                 hubConnection.Start(host.Transport).Wait();
-                proxy.Invoke("Send", "Hello");
+                    proxy.Invoke("Send");
 
                 Assert.True(tcs.Task.Wait(TimeSpan.FromSeconds(10)));
                 hubConnection.Stop();
@@ -168,6 +168,17 @@ namespace Microsoft.AspNet.SignalR.Tests
         }
 
         [Theory]
+        public void RequestHeadersCanBeSetOnceConnected(HostType hostType, TransportType transportType, MessageBusType messageBusType)
+                var mre = new ManualResetEventSlim();
+                    proxy.On("sendHeader", (headers) =>
+                    {
+                        Assert.Equal<string>("test-header", (string)headers.testHeader);
+                        mre.Set();
+                    });
+
+                    hubConnection.Headers.Add("test-header", "test-header");
+                    proxy.Invoke("Send");
+                    Assert.True(mre.Wait(TimeSpan.FromSeconds(5)));
         [InlineData(HostType.Memory, TransportType.ServerSentEvents)]
         [InlineData(HostType.Memory, TransportType.LongPolling)]
         [InlineData(HostType.IISExpress, TransportType.LongPolling)]
