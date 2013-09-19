@@ -24,16 +24,37 @@ namespace Microsoft.AspNet.SignalR.Tests
                 host.Initialize();
                 var connection = CreateConnection(host, "/examine-request");
 
-                connection.Received += arg =>
-            {
-                JObject headers = JsonConvert.DeserializeObject<JObject>(arg);
-                if (transportType != TransportType.Websockets)
+                connection.Received += (arg) =>
                 {
-                    Assert.Equal("referer", (string)headers["refererHeader"]);
-                }
-                Assert.Equal("test-header", (string)headers["testHeader"]);
-                tcs.TrySetResult(null);
-            };
+<<<<<<< HEAD
+                    JObject headers = JsonConvert.DeserializeObject<JObject>(arg);
+=======
+                    connection.Received += arg =>
+                    {
+                        JObject headers = JsonConvert.DeserializeObject<JObject>(arg);
+                        if (transportType != TransportType.Websockets)
+                        {
+                            Assert.Equal("referer", (string)headers["refererHeader"]);
+                            Assert.NotNull((string)headers["userAgentHeader"]);
+                        }
+
+                        Assert.Equal("test-header", (string)headers["testHeader"]);
+
+                        tcs.TrySetResult(null);
+                    };
+
+                    connection.Error += e => tcs.TrySetException(e);
+
+                    connection.Headers.Add("test-header", "test-header");
+
+>>>>>>> c5a1bfe... Made changes as per code review feedback
+                    if (transportType != TransportType.Websockets)
+                    {
+                        Assert.Equal("referer", (string)headers["refererHeader"]);
+                    }
+                    Assert.Equal("test-header", (string)headers["testHeader"]);
+                    tcs.TrySetResult(null);
+                };
 
                 connection.Error += e => tcs.TrySetException(e);
 
